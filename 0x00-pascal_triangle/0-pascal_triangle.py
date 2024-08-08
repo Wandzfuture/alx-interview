@@ -1,22 +1,22 @@
 def pascal_triangle(n):
     """
-    Returns a list of lists of integers representing the Pascal's triangle of n.
-    
-    Args:
-        n (int): The number of levels in the triangle.
-    
-    Returns:
-        list: A list of lists of integers representing the Pascal's triangle of n.
+    Generates Pascal's triangle for a given positive integer n.
+    Returns a list of lists of integers representing the triangle.
+    Returns an empty list if n <= 0.
     """
     if n <= 0:
         return []
-    
+
     triangle = [[1]]
     for i in range(1, n):
-        row = [1]
-        for j in range(1, i):
-            row.append(triangle[i-1][j-1] + triangle[i-1][j])
-        row.append(1)
-        triangle.append(row)
-    
+        prev_row = triangle[-1]
+        new_row = [1] + [prev_row[j] + prev_row[j + 1] for j in range(len(prev_row) - 1)] + [1]
+        triangle.append(new_row)
+
     return triangle
+
+# Example usage:
+if __name__ == "__main__":
+    triangle = pascal_triangle(5)
+    for row in triangle:
+        print("[{}]".format(",".join(map(str, row))))
