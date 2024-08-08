@@ -1,3 +1,9 @@
+#!/usr/bin/python3
+"""
+0-pascal_triangle
+"""
+
+
 def pascal_triangle(n):
     """
     Generates Pascal's triangle for a given positive integer n.
@@ -14,9 +20,3 @@ def pascal_triangle(n):
         triangle.append(new_row)
 
     return triangle
-
-# Example usage:
-if __name__ == "__main__":
-    triangle = pascal_triangle(5)
-    for row in triangle:
-        print("[{}]".format(",".join(map(str, row))))
