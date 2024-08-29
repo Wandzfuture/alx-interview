@@ -1,7 +1,5 @@
 #!/usr/bin/python3
-"""
-This script reads stdin line by line and computes metrics.
-"""
+"""Log parsing script for processing stdin and computing metrics."""
 
 import sys
 import re
@@ -9,38 +7,40 @@ from collections import defaultdict
 
 
 def print_stats(total_size, status_codes):
-    """Print accumulated statistics."""
+    """Print current statistics for file size and status codes."""
     print(f"File size: {total_size}")
     for code in sorted(status_codes.keys()):
         if status_codes[code] > 0:
             print(f"{code}: {status_codes[code]}")
 
 
-def parse_line(line):
-    """Parse a line and return status code and file size."""
-    pattern = r'(\d+\.\d+\.\d+\.\d+) - \[(.*?)\] "GET /projects/260 HTTP/1.1" (\d+) (\d+)'
-    match = re.match(pattern, line)
-    if match:
-        return int(match.group(3)), int(match.group(4))
-    return None, None
-
-
 def main():
-    """Main function to process input and print statistics."""
+    """Process log entries and compute statistics."""
     total_size = 0
     status_codes = defaultdict(int)
     line_count = 0
+    pattern = (
+        r'^(\d+\.\d+\.\d+\.\d+) - \[(.*?)\] '
+        r'"GET /projects/260 HTTP/1.1" (\d+) (\d+)$'
+    )
 
     try:
         for line in sys.stdin:
-            status_code, file_size = parse_line(line.strip())
-            if status_code and file_size:
+            line = line.strip()
+            match = re.match(pattern, line)
+            if match:
+                status_code = int(match.group(3))
+                file_size = int(match.group(4))
+
                 total_size += file_size
-                status_codes[status_code] += 1
+
+                if status_code in [200, 301, 400, 401, 403, 404, 405, 500]:
+                    status_codes[status_code] += 1
+
                 line_count += 1
 
-            if line_count % 10 == 0:
-                print_stats(total_size, status_codes)
+                if line_count % 10 == 0:
+                    print_stats(total_size, status_codes)
 
     except KeyboardInterrupt:
         print_stats(total_size, status_codes)
