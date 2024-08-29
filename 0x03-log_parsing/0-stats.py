@@ -1,13 +1,15 @@
 #!/usr/bin/python3
 """
-Reads stdin line by line and computes metrics
+This script reads stdin line by line and computes metrics.
 """
+
 import sys
 import re
 from collections import defaultdict
 
 
 def print_stats(total_size, status_codes):
+    """Print accumulated statistics."""
     print(f"File size: {total_size}")
     for code in sorted(status_codes.keys()):
         if status_codes[code] > 0:
@@ -15,6 +17,7 @@ def print_stats(total_size, status_codes):
 
 
 def parse_line(line):
+    """Parse a line and return status code and file size."""
     pattern = r'(\d+\.\d+\.\d+\.\d+) - \[(.*?)\] "GET /projects/260 HTTP/1.1" (\d+) (\d+)'
     match = re.match(pattern, line)
     if match:
@@ -23,6 +26,7 @@ def parse_line(line):
 
 
 def main():
+    """Main function to process input and print statistics."""
     total_size = 0
     status_codes = defaultdict(int)
     line_count = 0
@@ -41,6 +45,7 @@ def main():
     except KeyboardInterrupt:
         print_stats(total_size, status_codes)
         sys.exit(0)
+
 
 if __name__ == "__main__":
     main()
