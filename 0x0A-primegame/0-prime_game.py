@@ -7,7 +7,7 @@ Prime Game Implementation
 def isWinner(x, nums):
     """
     Determine the winner of the Prime Game for multiple rounds.
-    
+
     :param x: number of rounds
     :param nums: array of n for each round
     :return: name of the player that won the most rounds, or None if it's a tie
@@ -25,17 +25,17 @@ def isWinner(x, nums):
     def play_round(n):
         """
         Play a single round of the game.
-        
+
         :param n: the upper limit of the set of consecutive integers
         :return: True if Maria wins, False if Ben wins
         """
         primes = sieve_of_eratosthenes(n)
         player_turn = True  # True for Maria, False for Ben
-        
+
         for i in range(2, n + 1):
             if primes[i]:
                 player_turn = not player_turn
-        
+
         return not player_turn  # The last player to make a move wins
 
     if x <= 0 or not nums:
